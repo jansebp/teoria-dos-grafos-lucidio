@@ -3,7 +3,6 @@ package estruturas_de_dados;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.omg.CORBA.TIMEOUT;
 
 /**
  *
