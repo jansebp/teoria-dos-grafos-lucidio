@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- *
- * @author Jansepetrus Brasileiro   -   11111976
- * @author Ana Beatrice Severo      -   
+ * 
+ * @author Jansepetrus Brasileiro Pereira   -   11111976
  */
 public class Grafo {
     private List<Vertice>   vertices = new ArrayList<Vertice>();
@@ -37,7 +36,9 @@ public class Grafo {
             Vertice origem = e.origem;
             Vertice destino = e.destino;
             
-            if (!this.vertices.contains(origem) || !this.vertices.contains(destino)) continue;
+            if (!this.vertices.contains(origem) || !this.vertices.contains(destino)) {
+                continue;
+            }
             
             int indice = this.vertices.indexOf(origem);
             Vertice verticeDeOrigem = this.vertices.get(indice);
@@ -278,6 +279,7 @@ public class Grafo {
             return caminho;
         }
         
+        @Override
         public String toString(){
             StringBuilder texto = new StringBuilder();
             texto.append("Custo = ").append(custo).append("\n");
