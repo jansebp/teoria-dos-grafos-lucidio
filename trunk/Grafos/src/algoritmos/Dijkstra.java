@@ -8,6 +8,11 @@ import java.util.List;
 
 /**
  * Implementação do Algoritmo de Dijsktra para Cálculo do Menor Caminho
+ * 
+ * Bibliografia:    http://informatica.hsw.uol.com.br/algoritmos-de-roteamento3.htm
+ *                  http://www.lcad.icmc.usp.br/~nonato/ED/Dijkstra/node84.html
+ *                  http://en.wikipedia.org/wiki/Dijkstra%27s_algorithm
+ *                  http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/GraphAlgor/dijkstraAlgor.htm
  *
  * @author Jansepetrus Brasileiro Pereira - 11111976
  */
@@ -35,89 +40,68 @@ public class Dijkstra {
          * Fim do Tratamento de Exceções
          */
 
-        // Adiciona a origem na lista do menor caminho
-        menorCaminho.add(inicio);
+        menorCaminho.add(inicio);   //  Adicionando o Vértice inicial à lista do Menor Caminho.
 
-        // Colocando a distancias iniciais
+        /*  Deve-se colocar as distâncias (custos) iniciais de cada Vértice.
+         * O Vértice atual possui distância zero (custo para chegar até ele é zero).
+         * Todos os outros começam com distância infinita.
+         */
         for (int i = 0; i < grafo.getVertices().size(); i++) {
-
-            // Vertice atual tem distancia zero, e todos os outros, 9999("infinita")
             if (grafo.getVertices().get(i).getNome().equals(inicio.getNome())) {
-                grafo.getVertices().get(i).setValor(0);
+                grafo.getVertices().get(i).setValor(0); //  Zero para o Vértice atual
             } else {
-                grafo.getVertices().get(i).setValor(Integer.MAX_VALUE);
+                grafo.getVertices().get(i).setValor(Integer.MAX_VALUE); //  Infinito para os outros
             }
 
-            //Insere o vertice na lista de vertices nao visitados 
-            this.naoVisitados.add(grafo.getVertices().get(i));
+            this.naoVisitados.add(grafo.getVertices().get(i));  //  Adiciona o Vértice atual à lista de Vértices não visitados.
         }
 
-        Collections.sort(naoVisitados);
+        Collections.sort(naoVisitados); //  Ordena a lista. DEVE SER UTILIZADO O HEAP! =/
 
-        // O algoritmo continua ate que todos os vertices sejam visitados
-        while (!this.naoVisitados.isEmpty()) {
-
-            // Toma-se sempre o vertice com menor distancia, que eh o primeiro da
-            // lista
-
-            atual = this.naoVisitados.get(0);
-//            System.out.println("Pegou esse vertice:  " + atual);
+        while (!this.naoVisitados.isEmpty()) {  //  Enquanto houver Vértice para ser visitado, continuar o algoritmo.
             /*
-             * Para cada vizinho (cada aresta), calcula-se a sua possivel
-             * distancia, somando a distancia do vertice atual com a da aresta
-             * correspondente. Se essa distancia for menor que a distancia do
-             * vizinho, esta eh atualizada.
+             * Nesse ponto, após a ordenação, o primeiro Vértice da lista é o de menor distância.
+             */
+            atual = this.naoVisitados.get(0);
+//            System.out.println("Pegou o Vértice:  " + atual);
+            /*
+             * É calculada a distância do Vértice atual para cada vizinho (cada aresta),
+             * somando-se a distância do Vértice atual com a da aresta correspondente.
+             * No caso da distância ser menor que a distância do vizinho, o valor é atualizado.
              */
             for (int i = 0; i < atual.getArestas().size(); i++) {
-
                 vizinho = atual.getArestas().get(i).getVerticeDeDestino();
 //                System.out.println("Olhando o vizinho de " + atual + ": " + vizinho);
                 if (!vizinho.isVisitado()) {
-
-                    // Comparando a distância do vizinho com a possível
-                    // distância
-                    if (vizinho.getValor() > (atual.getValor() + atual.getArestas().get(i).getPeso())) {
-
-                        vizinho.setValor(atual.getValor() + atual.getArestas().get(i).getPeso());
+                    if (vizinho.getValor() > (atual.getValor() + atual.getArestas().get(i).getPeso())) {    //  Faz a comparação das distâncias, como citado mais acima
+                        vizinho.setValor(atual.getValor() + atual.getArestas().get(i).getPeso());   //  No caso da distância menor, o valor é atualizado.
                         vizinho.setPai(atual);
 
-                        /*
-                         * Se o vizinho eh o vertice procurado, e foi feita uma
-                         * mudanca na distancia, a lista com o menor caminho
-                         * anterior eh apagada, pois existe um caminho menor
-                         * vertices pais, ateh o vertice origem.
-                         */
-                        if (vizinho == fim) {
-                            menorCaminho.clear();
+                        if (vizinho == fim) {       //  Se o vizinho é o Vértice final (o que está sendo procurado),
+                                                    //indica que a distância foi atualizada.
+                            menorCaminho.clear();   //Portanto, a lista é apagada, já que existe um caminho menor.
                             verticeCaminho = vizinho;
                             menorCaminho.add(vizinho);
                             while (verticeCaminho.getPai() != null) {
-
                                 menorCaminho.add(verticeCaminho.getPai());
                                 verticeCaminho = verticeCaminho.getPai();
 
                             }
-                            // Ordena a lista do menor caminho, para que ele
-                            // seja exibido da origem ao destino.
-                            Collections.sort(menorCaminho);
 
+                            Collections.sort(menorCaminho); //  Ordena a lista de menor caminho.
                         }
                     }
                 }
 
             }
-            // Marca o vertice atual como visitado e o retira da lista de nao visitados
-            atual.visitar();
-            this.naoVisitados.remove(atual);
-            /*
-             * Ordena a lista, para que o vertice com menor distancia
-             * fique na primeira posicao
-             */
+            atual.visitar();    //  Indica que o Vértice atual foi visitado.
+            this.naoVisitados.remove(atual);    //  Remove o vértice atual da lista de não visitados.
 
-            Collections.sort(naoVisitados);
+            Collections.sort(naoVisitados); //  Ordena a lista de Vértices não visitados, de forma que o de menor
+                                            //distância fique na primeira posição.
 //            System.out.println(naoVisitados);
         }
-        
+
         return menorCaminho;
     }
 }
