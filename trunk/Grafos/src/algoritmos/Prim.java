@@ -15,6 +15,7 @@ import java.util.List;
  * 
  * Bibliografia:    http://en.wikipedia.org/wiki/Prim%27s_algorithm
  *                  http://lcm.csa.iisc.ernet.in/dsa/node183.html
+ *                  http://pt.wikipedia.org/wiki/Algoritmo_de_Prim
  *
  * @author Jansepetrus Brasileiro Pereira - 11111976
  */
