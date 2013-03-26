@@ -22,12 +22,13 @@ public class Main {
     public static void main(String args[]) {
         /**
          * *********************************************************************
-         * Criação do meu Grafo Não-Direcionado.
+         * Criação do meu Grafo
          * ********************************************************************
          */
         System.out.println("Grafo Não-Direcionado");
-
         Grafo grafo = new Grafo(Grafo.TIPO.NAO_DIRECIONADO);
+//        System.out.println("Grafo Direcionado");
+//        Grafo grafo = new Grafo(Grafo.TIPO.DIRECIONADO);
         /*
          * Criação do Vértices.
          */
@@ -80,11 +81,11 @@ public class Main {
         System.out.println(grafo);  /*  Impressão do Grafo. */
 
         Vertice inicio = a; /*  Definição do Vértice de Início. */
-        Vertice fim = g; /*  Definição do Vértice de Fim.    */
+        Vertice fim = g;    /*  Definição do Vértice de Fim.    */
 
         /**
          * *********************************************************************
-         * Algoritmo de Prim
+         * Algoritmo de Prim (Grafo Não-Direcionado)
          * ********************************************************************
          */
         {
@@ -100,7 +101,7 @@ public class Main {
         }
         /**
          * *********************************************************************
-         * Algoritmo de Dijkstra
+         * Algoritmo de Dijkstra (Grafos Direcionados ou Não-Direcionados)
          * ********************************************************************
          */
         {
@@ -113,7 +114,6 @@ public class Main {
             }
             texto.append(fim.getNome() + "\nCusto do Caminho: " + menorCaminho.get(menorCaminho.size() - 1).getValor());
             System.out.println(texto);
-
         }
     }
 }
