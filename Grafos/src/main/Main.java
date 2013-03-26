@@ -23,7 +23,7 @@ public class Main {
         /**
          * *********************************************************************
          * Criação do meu Grafo Não-Direcionado.
-         *********************************************************************
+         * ********************************************************************
          */
         System.out.println("Grafo Não-Direcionado");
 
@@ -80,21 +80,28 @@ public class Main {
         System.out.println(grafo);  /*  Impressão do Grafo. */
 
         Vertice inicio = a; /*  Definição do Vértice de Início. */
-        Vertice fim    = g; /*  Definição do Vértice de Fim.    */
+        Vertice fim = g; /*  Definição do Vértice de Fim.    */
 
         /**
          * *********************************************************************
          * Algoritmo de Prim
-         *********************************************************************
+         * ********************************************************************
          */
         {
-            System.out.println("Árvore de Custo Mínimo (Prim) partindo do Vértice " + inicio.getNome() + ":");
-            System.out.println(new Prim().getArvoreGeradoraMinima(grafo, inicio) + "\n");
+            List<Aresta> custoMinimo = new Prim().getArvoreGeradoraMinima(grafo, inicio);
+            int custo = 0;
+
+            StringBuilder texto = new StringBuilder();
+            for (int i = 0; i < custoMinimo.size(); i++) {
+                custo += custoMinimo.get(i).getPeso();
+            }
+            texto.append("Árvore de Custo Mínimo (Prim) partindo do Vértice ").append(inicio.getNome()).append(":\n").append(custoMinimo.toString()).append("\nCusto do Caminho: ").append(custo).append("\n");
+            System.out.println(texto);
         }
         /**
          * *********************************************************************
          * Algoritmo de Dijkstra
-         *********************************************************************
+         * ********************************************************************
          */
         {
             List<Vertice> menorCaminho = new Dijkstra().getMenorCaminho(grafo, inicio, fim);

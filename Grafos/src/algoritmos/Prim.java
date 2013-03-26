@@ -12,6 +12,9 @@ import java.util.List;
  * Geradora Mínima (MST) num grafo conectado, valorado e não direcionado. Ou
  * seja, o algoritmo encontra um subgrafo no qual a soma total das arestas é
  * "mínima" e todos os vértices estão interligados.
+ * 
+ * Bibliografia:    http://en.wikipedia.org/wiki/Prim%27s_algorithm
+ *                  http://lcm.csa.iisc.ernet.in/dsa/node183.html
  *
  * @author Jansepetrus Brasileiro Pereira - 11111976
  */
