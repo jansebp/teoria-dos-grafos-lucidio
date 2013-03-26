@@ -1,293 +1,147 @@
 package estruturas_de_dados;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
+ * Classe que implementa a estrutura do Grafo.
  * 
  * @author Jansepetrus Brasileiro Pereira   -   11111976
  */
 public class Grafo {
     private List<Vertice>   vertices = new ArrayList<Vertice>();
     private List<Aresta>    arestas  = new ArrayList<Aresta>();
-    
+
     public enum TIPO {DIRECIONADO, NAO_DIRECIONADO};
-    private TIPO tipo = TIPO.NAO_DIRECIONADO;
+    private TIPO tipo = TIPO.NAO_DIRECIONADO;   /* Por padrão, crio um Grafo Não-Direcionado */
+
+    /***************************************************************************
+     * Construtores da Classe
+     **************************************************************************/
     
+    /**
+     * Construtor Default.
+     */
     public Grafo(){
     }
-    
+
+    /**
+     * Construtor da Classe.
+     * 
+     * @param tipo Se o Grafo é do tipo Direcionado ou Não-Direcionado.
+     */
     public Grafo(TIPO tipo){
         this();
         this.tipo = tipo;
     }
+	
     
-    public Grafo(List<Vertice> vertices, List<Aresta> arestas){
-        this(TIPO.NAO_DIRECIONADO, vertices, arestas);
-    }
+    /***************************************************************************
+     * Métodos "Get & Set"
+     **************************************************************************/
     
-    public Grafo(TIPO tipo, List<Vertice> vertices, List<Aresta> arestas){
-        this(tipo);
-        this.vertices.addAll(vertices);
-        this.arestas.addAll(arestas);
-        
-        for (Aresta e : arestas){
-            Vertice origem = e.origem;
-            Vertice destino = e.destino;
-            
-            if (!this.vertices.contains(origem) || !this.vertices.contains(destino)) {
-                continue;
-            }
-            
-            int indice = this.vertices.indexOf(origem);
-            Vertice verticeDeOrigem = this.vertices.get(indice);
-            indice = this.vertices.indexOf(destino);
-            Vertice verticeDeDestino = this.vertices.get(indice);
-            verticeDeOrigem.addAresta(e);
-            if(this.tipo == TIPO.NAO_DIRECIONADO){
-                Aresta loop = new Aresta (e.custo, verticeDeDestino, verticeDeOrigem);
-                verticeDeDestino.addAresta(loop);
-                this.arestas.add(loop);
-            }
-        }
-    }
-    
+    /**
+     * Método que retorna se um Grafo é Direcionado ou Não-Direcionado.
+     * 
+     * @return O tipo do Grafo.
+     */
     public TIPO getTipo(){
-        return tipo;
+        return this.tipo;
     }
-    
-    public List<Vertice> getVertices(){
+    /**
+     * Método que retorna os vértices do Grafo.
+     * 
+     * @return A lista de vértices do Grafo.
+     */
+    public List<Vertice> getVertices() {
         return vertices;
     }
-    
-    public List<Aresta> getArestas(){
+    /**
+     * Método que seta a lista de vértices do Grafo.
+     * 
+     * @param vertices A lista de vértices.
+     */
+    public void setVertices(List<Vertice> vertices) {
+        this.vertices = vertices;
+    }
+    /**
+     * Método que retorna as arestas do Grafo.
+     * 
+     * @return A lista de arestas do Grafo.
+     */
+    public List<Aresta> getArestas() {
         return arestas;
     }
+    /**
+     * Método que seta a lista de arestas do Grafo.
+     * 
+     * @param arestas A lista de arestas.
+     */
+    public void setArestas(List<Aresta> arestas) {
+        this.arestas = arestas;
+    }
     
+    /***************************************************************************
+     * Outros Métodos
+     **************************************************************************/
+    /**
+     * Método que verifica se o Grafo possui Arestas de valor negativo.
+     * @param listaVertices
+     * @return 
+     */
+    public boolean temArestaNegativa() {
+        List<Vertice> listaVertices = this.getVertices();
+        for (Vertice v : listaVertices) {
+            for (Aresta e : v.getArestas()) {
+                if (e.getPeso() < 0) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+    /**
+     * Método para adicionar um vértice à lista de vértices do Grafo.
+     * 
+     * @param v O vértice a ser adicionado.
+     */
+    public void addVertice(Vertice v){
+        this.vertices.add(v);
+    }
+    /**
+     * Método para adicionar uma aresta à lista de arestas do Grafo.
+     * 
+     * @param a A aresta a ser adicionada.
+     */
+    public void addAresta(Aresta a){
+        Vertice v1 = a.getVerticeDeOrigem();
+        Vertice v2 = a.getVerticeDeDestino();
+        
+        v1.addVizinho(v2, a.getPeso());
+        v2.addVizinho(v1, a.getPeso());
+        
+        this.arestas.add(a);
+    }
+    /**
+     * Método que ordena as arestas do grafo
+     */
+    public void ordenarArestas(){
+        Collections.sort(this.getArestas());
+    }
+    /**
+     * Sobrescrita do Método toString()
+     * 
+     * @return 
+     */
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder texto = new StringBuilder();
-        for (Vertice v : vertices){
-            texto.append(v.toString());
+        for (Vertice v : this.getVertices()){
+            texto.append(v.toString()).append("\n");
         }
         
         return texto.toString();
-    }
-    
-    public static class Vertice implements Comparable<Vertice>{
-        private int valor = Integer.MIN_VALUE;
-        private List<Aresta> arestas = new ArrayList<Aresta>();
-        
-        public Vertice(int valor){
-            this.valor = valor;
-        }
-        
-        public int getValor(){
-            return valor;
-        }
-        
-        public void addAresta(Aresta e){
-            arestas.add(e);
-        }
-        
-        public List<Aresta> getArestas(){
-            return arestas;
-        }
-        
-        public boolean caminhoPara(Vertice v){
-            for (Aresta e : arestas){
-                if(e.destino.equals(v))
-                    return true;
-            }
-            return false;
-        }
-        
-        @Override
-        public int compareTo(Vertice v){
-            if (this.valor < v.valor)
-                return -1;
-            if (this.valor > v.valor)
-                return 1;
-            
-            return 0;
-        }
-        
-        @Override
-        public boolean equals(Object v1){
-            if(!(v1 instanceof Vertice))
-                return false;
-            
-            Vertice v = (Vertice)v1;
-            
-            boolean valores = this.valor == v.valor;
-            if(!valores)
-                return false;
-            
-            boolean arestas = v.getArestas().equals(this.getArestas());
-            if(!arestas)
-                return false;
-            
-            return true;
-        }
-        
-        @Override
-        public String toString(){
-            StringBuilder texto = new StringBuilder();
-            texto.append(valor).append("\n");
-            for(Aresta e : arestas){
-                texto.append("\t").append(e.toString());
-            }
-            
-            return texto.toString();
-        }
-    }
-    
-    public static class Aresta implements Comparable<Aresta>{
-        private Vertice origem = null;
-        private Vertice destino = null;
-        private int custo = 0;
-        
-        public Aresta(int custo, Vertice origem, Vertice destino){
-            if (origem == null || destino == null)
-                throw (new NullPointerException("Os vértices de origem e destino devem ser não-nulos."));
-            
-            this.custo = custo;
-            this.origem = origem;
-            this.destino = destino;
-        }
-        
-        public int getCusto(){
-            return custo;
-        }
-        
-        public Vertice getVerticeDeOrigem(){
-            return origem;
-        }
-        
-        public Vertice getVerticeDeDestino(){
-            return destino;
-        }
-        
-        @Override
-        public int compareTo(Aresta e){
-            if(this.custo < e.custo)
-                return -1;
-            if(this.custo > e.custo)
-                return 1;
-            
-            return 0;
-        }
-        
-        @Override
-        public boolean equals(Object e1){
-            if(!(e1 instanceof Aresta))
-                return false;
-            
-            Aresta e = (Aresta)e1;
-            
-            boolean custos = this.custo == e.custo;
-            if(!custos)
-                return false;
-            
-            boolean origens = this.origem.equals(e.origem);
-            if(!origens)
-                return false;
-            
-            boolean destinos = this.destino.equals(e.destino);
-            if(!destinos)
-                return false;
-            
-            return true;
-        }
-        
-        public String toString(){
-            StringBuilder texto = new StringBuilder();
-            texto.append("[").append(origem.valor).append("]").append("->").append("[").append(destino.valor).append("]").append(" = ").append(custo).append("\n");
-            
-            return texto.toString();
-        }
-    }
-    
-    public static class CustoVertice implements Comparable<CustoVertice>{
-        private int custo = Integer.MAX_VALUE;
-        private Vertice vertice = null;
-        
-        public CustoVertice(int custo, Vertice vertice){
-            if(vertice == null)
-                throw (new NullPointerException("O vértice não pode ser nulo."));
-            
-            this.custo = custo;
-            this.vertice = vertice;
-        }
-        
-        public int getCusto(){
-            return custo;
-        }
-        
-        public void setCusto(int custo){
-            this.custo = custo;
-        }
-        
-        public Vertice getVertice(){
-            return vertice;
-        }
-        
-        @Override
-        public int compareTo(CustoVertice cv){
-            if(cv == null)
-                throw (new NullPointerException("O custo do vértice não pode ser nulo."));
-            
-            if(this.custo < cv.custo)
-                return -1;
-            if(this.custo > cv.custo)
-                return 1;
-            
-            return 0;
-        }
-        
-        @Override
-        public String toString(){
-            StringBuilder texto = new StringBuilder();
-            texto.append("Vértice = ").append(vertice.getValor()).append(" Custo = ").append(custo).append("\n");
-            
-            return texto.toString();
-        }
-    }
-    
-    public static class CustoCaminho{
-        private int custo = 0;
-        private Set<Aresta> caminho = null;
-        
-        public CustoCaminho(int custo, Set<Aresta> caminho){
-            if(caminho == null)
-                throw (new NullPointerException("O caminho não pode ser nulo"));
-            
-            this.custo = custo;
-            this.caminho = caminho;
-        }
-        
-        public int getCusto(){
-            return custo;
-        }
-        
-        public void setCusto(int custo){
-            this.custo = custo;
-        }
-        
-        public Set<Aresta> getCaminho(){
-            return caminho;
-        }
-        
-        @Override
-        public String toString(){
-            StringBuilder texto = new StringBuilder();
-            texto.append("Custo = ").append(custo).append("\n");
-            for (Aresta e : caminho){
-                texto.append("\t").append(e);
-            }
-            
-            return texto.toString();
-        }
     }
 }
