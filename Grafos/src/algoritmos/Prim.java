@@ -45,7 +45,7 @@ public class Prim {
         
         Vertice u = inicio;
 
-        /*  Implementar o HEAP!!!!!!!!  */
+        /*  Implementar com o HEAP!!!!!!!!  */
         OrderedVector arestas = new OrderedVector(u.getArestas());
         List<Vertice> T = new ArrayList<Vertice>();
         List<Aresta> S = new ArrayList<Aresta>();
